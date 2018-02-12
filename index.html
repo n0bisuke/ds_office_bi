@@ -47,7 +47,7 @@
         let temperature = [];
         let co2 = [];
 
-        const client = mqtt.connect();
+        const client = mqtt.connect("mqtt://ds-playground.japaneast.cloudapp.azure.com");
         client.subscribe("n0bisuke");
         client.on('message', (topic, payload) => {
             console.log(topic,payload.toString('utf-8'));

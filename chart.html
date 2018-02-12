@@ -1,0 +1,73 @@
+<!doctype html>
+<html style="height:100%;font-size:14px;">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body style="margin:0;position:absolute;top:0;bottom:0;left:0;right:0;font-size:14px;user-select:none;-webkit-user-select: none;overflow:hidden;">
+    <canvas id="myChart"></canvas>
+    <script src="https://unpkg.com/mqtt@2.15.1/dist/mqtt.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+    <script>
+        const ctx = document.getElementById('myChart').getContext('2d');
+        const myLineChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ["January", "February", "March", "April", "May", "June", "July"],
+                datasets: [{
+                    label: "湿度",
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: [0, 0, 0, 0, 0, 0, 45],
+                },{
+                    label: "温度",
+                    borderColor: 'rgb(99,132,255)',
+                    data: [0, 0, 0, 0, 0, 0, 45],
+                },
+                {
+                    label: "CO2",
+                    backgroundColor: 'rgb(132,255, 99)',
+                    borderColor: 'rgb(132,255, 99)',
+                    data: [0, 0, 0, 0, 0, 0, 45],
+                }]
+            },
+            options: {}
+        });
+        
+        let humidity = [];
+        let temperature = [];
+        let co2 = [];
+        let ambient = [[],[],[]];
+
+        const client = mqtt.connect();
+        client.subscribe("n0bisuke");
+        client.on('message', (topic, payload) => {
+            console.log(topic,payload.toString('utf-8'));
+            const json = JSON.parse(payload.toString('utf-8'));
+
+            ambient[0].unshift(json.humidity); //humidity
+            ambient[1].unshift(json.temperature); //temperature
+            ambient[2].unshift(json.co2); //co2
+
+            for (let i = 0, len = myLineChart.data.datasets.length; i < len; i++) {
+                for (let j = 0, len = myLineChart.data.datasets[i].data.length; j < len; j++) {
+                    myLineChart.data.datasets[i].data[j] = ambient[i][j];
+                }              
+            }
+
+            /**
+                myLineChart.data.datasets[i].data[6] = ambient[i][6];
+                myLineChart.data.datasets[i].data[5] = ambient[i][5];
+                myLineChart.data.datasets[i].data[4] = ambient[i][4];
+                myLineChart.data.datasets[i].data[3] = ambient[i][3];
+                myLineChart.data.datasets[i].data[2] = ambient[i][2];
+                myLineChart.data.datasets[i].data[1] = ambient[i][1];
+                myLineChart.data.datasets[i].data[0] = ambient[i][0];
+             * */
+            
+            myLineChart.update();
+        });
+
+    </script>
+</body>
+
+</html>

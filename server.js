@@ -24,6 +24,7 @@ broker.on('published', (packet, client) => {
 
 app.use(express.static(__dirname + '/public'));
 app.get('/',(req,res) => res.sendFile(__dirname + '/index.html'));
+app.get('/chart',(req,res) => res.sendFile(__dirname + '/chart.html'));
 
 broker.attachHttpServer(httpServer);
 httpServer.listen(HTTP_PORT);
