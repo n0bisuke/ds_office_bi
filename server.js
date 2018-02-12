@@ -4,7 +4,7 @@ const express = require("express");
 const http = require('http');
 const mosca = require('mosca');
 
-const HTTP_PORT = 3000;
+const HTTP_PORT = 4002;
 const MQTT_PORT = 1883;
 
 const app = express();
@@ -27,3 +27,5 @@ app.get('/',(req,res) => res.sendFile(__dirname + '/index.html'));
 
 broker.attachHttpServer(httpServer);
 httpServer.listen(HTTP_PORT);
+
+console.log(`listend HTTP *:${HTTP_PORT} / MQTT *:${MQTT_PORT}`);
