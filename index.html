@@ -15,7 +15,7 @@
     <script>
         data = [
             {
-                "環境データ":"湿度",
+                "環境データ":"湿度%",
                 "6秒前":"75",
                 "5秒前":"40",
                 "4秒前":"23",
@@ -24,7 +24,7 @@
                 "1秒前":"15"
             },
             {
-                "環境データ":"温度",
+                "環境データ":"温度℃",
                 "6秒前":"75",
                 "5秒前":"40",
                 "4秒前":"23",
@@ -33,20 +33,20 @@
                 "1秒前":"15"
             },
             {
-                "環境データ":"CO2濃度_(×10)",
-                "6秒前":"75",
-                "5秒前":"40",
-                "4秒前":"23",
-                "3秒前":"32",
-                "2秒前":"51",
-                "1秒前":"15"
+                "環境データ":"CO2濃度_(×0.01)",
+                "6秒前":"7.5",
+                "5秒前":"4.0",
+                "4秒前":"2.3",
+                "3秒前":"3.2",
+                "2秒前":"5.1",
+                "1秒前":"1.5"
             },
         ];
 
         let humidity = [];
         let temperature = [];
         let co2 = [];
-        
+
         const client = mqtt.connect();
         client.subscribe("n0bisuke");
         client.on('message', (topic, payload) => {
@@ -69,7 +69,7 @@
             data[1]["2秒前"] = temperature[1];
             data[1]["1秒前"] = temperature[0];
 
-            co2.unshift(json.co2);
+            co2.unshift(json.co2 * 0.01); //値の範囲を調整
             data[2]["6秒前"] = co2[5];
             data[2]["5秒前"] = co2[4];
             data[2]["4秒前"] = co2[3];
@@ -151,37 +151,37 @@
                 caption: '6秒前',
                 dataField: '6秒前',
                 dataType: 'number',
-                format: '##'
+                format: '#.##'
             }, {
                 id: '5秒前',
                 caption: '5秒前',
                 dataField: '5秒前',
                 dataType: 'number',
-                format: '##'
+                format: '#.##'
             }, {
                 id: '4秒前',
                 caption: '4秒前',
                 dataField: '4秒前',
                 dataType: 'number',
-                format: '##'
+                format: '#.##'
             }, {
                 id: '3秒前',
                 caption: '3秒前.',
                 dataField: '3秒前',
                 dataType: 'number',
-                format: '##'
+                format: '#.##'
             }, {
                 id: '2秒前',
                 caption: '2秒前.',
                 dataField: '2秒前',
                 dataType: 'number',
-                format: '##'
+                format: '#.##'
             }, {
                 id: '1秒前',
                 caption: '1秒前.',
                 dataField: '1秒前',
                 dataType: 'number',
-                format: '##'
+                format: '#.##'
             }, {
                 id: 'trend',
                 caption: 'LineSparkline',
